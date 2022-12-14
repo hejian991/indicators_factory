@@ -13,7 +13,7 @@ from crawlers.utils.redis_conn import rds
 
 class ExchangeNoticeMonitoring(SpiderBase):
     name = 'exchange_notice_monitoring'
-    exchange_name = 'Binance'
+    exchange_name = 'binance'
     headers = {
         'lang': 'zh-CN',
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko)",
@@ -42,9 +42,10 @@ class ExchangeNoticeMonitoring(SpiderBase):
             yesterday_end_time = (int(time.mktime(time.strptime(str(today), '%Y-%m-%d'))) - 1)
 
             for announcement in announcement_group['articles']:
-                if added_id_check(self.name, self.exchange_name, str(announcement['id']), 60 * 60 * 24 * 2):
-                    continue
                 if not (yesterday_start_time <= announcement['releaseDate'] // 1000 <= yesterday_end_time):
+                    continue
+
+                if not added_id_check(self.name, self.exchange_name, str(announcement['id']), 60 * 60 * 24 * 2):
                     continue
 
                 yield scrapy.Request(

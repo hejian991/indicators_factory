@@ -4,10 +4,9 @@ from crawlers.utils import rds
 from crawlers.utils.translate import UniversalTranslation
 
 
-@rds.thing_lock('exchange_announcement')
+@rds.thing_lock('exchange_notice_monitoring')
 def added_id_check(prefix, exchange_name, announcement_id, ttl):
-    key = f'exchange_announcement:{exchange_name}'
-    return rds.set(prefix, key, announcement_id, ttl)
+    return rds.set(prefix, exchange_name, announcement_id, ttl)
 
 def announcement_push(new_save, origin_url: str = None):
     new_save['title'], new_save['body'] = html.unescape(new_save['title']), html.unescape(new_save['body'])
